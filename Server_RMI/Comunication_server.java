@@ -19,5 +19,7 @@ public interface Comunication_server extends Remote {
     public Integer vote(ArrayList<String> list)throws RemoteException;
     public  HashMap listaEleicao(String nrtitulo)throws RemoteException;
     public void CadastrarPessoa()throws RemoteException;
+    public ListasCandidatos CriarLista(String nome)throws RemoteException;
+    
     
 }

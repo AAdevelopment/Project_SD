@@ -63,11 +63,29 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
        ArrayList<String> ListasCandidato1 = new ArrayList();
        
         if (type == 1){
-           ListasCandidatos listc = new ListasCandidatos(vetCand);
-           ListasCandidato1 = listc.Getlista(vetCand);
+          // ListasCandidatos listc = new ListasCandidatos(vetCand);
+         //  ListasCandidato1 = listc.Getlista(vetCand);
         
         }
         return ListasCandidato1;
+    }
+    
+    @Override
+    public ListasCandidatos CriarLista(String nome){
+        ListasCandidatos l = new ListasCandidatos(nome);
+        int n=0;
+        boolean verifica =true;
+        while(verifica==true){
+            if(JOptionPane.showInputDialog("digite o nome do candidato:").equals("")){
+             verifica =false;   
+             break;
+            }
+            else{
+                l.setList(JOptionPane.showInputDialog("digite o nome do candidato:"));
+                //JOptionPane.showConfirmDialog(null,"Deseja continuar ? ","Confirmacao",JOptionPane.YES_NO_OPTION);
+            }
+        }
+        return l;
     }
   
     
@@ -123,16 +141,16 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
         //System.out.println(el);
     @Override
      public  void CadastrarPessoa(){
+        String tipo_pessoa=""; 
         String name ="";
-        Long nrEstudante = null;
+        Long cartao = null;
         String Password = "";
         String Dpto_facul="";
         Date card_valid=null;
         String tel="";
         String morada="";
         
-  
-        String s[]={"Cadastrar nome:","Cadastrar NrEstudante:","Cadastrar Password","Cadastrar DPto","Cadastrar Card_valid",
+        String s[]={"Cadastrar tipo pessoa","Cadastrar nome:","Cadastrar Cartao do cidadao:","Cadastrar Password","Cadastrar DPto","Cadastrar Card_valid MM/yyyy",
             "Cadastrar telefone","Cadastrar Moradia"};
         String o[] = new String[s.length];
         
@@ -140,16 +158,18 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
            o[i]=JOptionPane.showInputDialog(s[i]); 
         }
         
-      
         DateFormat formatter = new SimpleDateFormat("MM/yyyy");
         try {
-            FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/pessoas");
+            FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/pessoas",true);
             
-            Pessoa p = new Pessoa( name=o[0],nrEstudante=Long.parseLong(o[1]),Password=o[2],Dpto_facul=o[3],
-            card_valid=(java.util.Date)formatter.parse(o[4]),tel=o[5],morada=o[6]);
-            String ss[] = new String[o.length];
-            out.write();
-            System.out.println(p.getName());
+            Pessoa p = new Pessoa(tipo_pessoa=o[0],name=o[1],cartao=Long.parseLong(o[2]),Password=o[3],Dpto_facul=o[4],
+            card_valid=(java.util.Date)formatter.parse(o[5]),tel=o[6],morada=o[7]);
+            String saida="";
+            
+            saida=p.getTipoPessoa()+";"+p.getName()+";"+p.getPassword()+";"+p.getDpto()+";"+
+            p.getCard_valid()+";"+p.getTel()+";"+p.getMorada();
+            out.write(saida+"\n");
+            out.close();            
         } catch (ParseException ex) {
            // Logger.getLogger(Server_RMI.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -33,8 +33,11 @@ public class AdminConsole  {
             
             String reply="";
             boolean verifica=true;
+            
             do{
-                opcao=Integer.parseInt(JOptionPane.showInputDialog("1-verificar conexao"+"\n"+"2-criar eleicao"+"\n"+"3-buscar lista de candidato"+"\n"+"9- sair do menu"));
+          
+                opcao=Integer.parseInt(JOptionPane.showInputDialog("1-verificar conexao"+"\n"+"2-criar eleicao"+"\n"+"3-criar lista de candidato\n"+"4-Registrar Pessoa"
+                        +"\n"+"9- sair do menu"));
                 switch(opcao){
                     case 1:
                     System.out.println( reply=h.Test_connection());
@@ -42,13 +45,18 @@ public class AdminConsole  {
                         h.criarEleicao();
                     break; 
                     case 3:
-                        System.out.println(h.returnList(1).toString());
+                       String nome="";
+                       nome=JOptionPane.showInputDialog("Digite o nome da lista");
+                       System.out.println(h.CriarLista(nome));
                     break;
+                    case 4:
+                        h.CadastrarPessoa();
+                        break;
                     case 9:
                         verifica=false;
                     break;
                 }    
-            }while(verifica=true);
+            }while(verifica =true);
              
         }catch(RemoteException re){
             re.getMessage();
