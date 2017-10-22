@@ -47,7 +47,7 @@ public class AdminConsole  {
                     case 3:
                        String nome="";
                        nome=JOptionPane.showInputDialog("Digite o nome da lista");
-                       System.out.println(h.CriarLista(nome));
+                       System.out.println(h.CriarLista(nome).toString());
                     break;
                     case 4:
                         h.CadastrarPessoa();

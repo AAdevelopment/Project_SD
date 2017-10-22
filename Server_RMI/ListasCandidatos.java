@@ -20,17 +20,18 @@ public class ListasCandidatos implements Serializable{
     Eleicao e;
     ListasCandidatos l;
     
-    public ListasCandidatos(String nome){
+    public ListasCandidatos(String nome,ArrayList<String> listacandidato){
       //  super();
         this.nome = nome;
-        listacandidato = new ArrayList();
-        this.e = e;
+        this.listacandidato =listacandidato;
+        this.listacandidato = new ArrayList();
+        
+        //this.e = e;
 
     }
     
    public void setList(String nomecandidato){
-       listacandidato.add(nomecandidato);
-       System.out.println(listacandidato.toString());
+       this.listacandidato.add(nomecandidato);
    }
    /* public ArrayList<String> Getlista(String[] v){
       listacandidato = new ArrayList();
@@ -39,5 +40,8 @@ public class ListasCandidatos implements Serializable{
       return listacandidato;
     }*/
    
-    
+    public String toString(){
+     
+     return this.nome +":"+ this.listacandidato.toString();
+    }
 }

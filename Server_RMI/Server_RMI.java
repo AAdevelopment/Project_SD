@@ -72,19 +72,23 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     
     @Override
     public ListasCandidatos CriarLista(String nome){
-        ListasCandidatos l = new ListasCandidatos(nome);
+        ArrayList<String> list = new ArrayList();
+        ListasCandidatos l = new ListasCandidatos(nome,list);
         int n=0;
+        String saida="";
         boolean verifica =true;
         while(verifica==true){
-            if(JOptionPane.showInputDialog("digite o nome do candidato:").equals("")){
+            saida=JOptionPane.showInputDialog("digite o nome do candidato, clique em cancel para sair:");
+            if(saida==null){
              verifica =false;   
              break;
             }
             else{
-                l.setList(JOptionPane.showInputDialog("digite o nome do candidato:"));
-                //JOptionPane.showConfirmDialog(null,"Deseja continuar ? ","Confirmacao",JOptionPane.YES_NO_OPTION);
+                l.setList(saida);    
             }
+            
         }
+        System.out.println(l);
         return l;
     }
   
