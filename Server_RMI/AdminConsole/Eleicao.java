@@ -5,6 +5,9 @@
  */
 package Server_RMI.AdminConsole;
 
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
@@ -14,25 +17,29 @@ import java.util.logging.Logger;
  *
  * @author gustavo
  */
-public class Eleicao implements Runnable {
-    Date d;
+
+public class Eleicao implements Runnable,Serializable {
     String tipo;
     String titulo;
     String descricao;
     Thread t;
-    public Eleicao(String tipo,String titulo){
-        d= new Date();
+    Date dataini;
+    Date datafim;
+    
+    public Eleicao(String tipo,String titulo,String dataini,String datafim) throws ParseException{
+        this.dataini = new Date();
+        this.datafim = new Date();
         this.tipo = tipo;
         this.titulo=titulo;
         t = new Thread(this,titulo);
         t.start();
     }
     
-    
     @Override
     public void run(){
         while(true){
-            System.out.println(d);
+            System.out.println(dataini);
+            
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {

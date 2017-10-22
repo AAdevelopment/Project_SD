@@ -5,24 +5,27 @@
  */
 package Server_RMI.AdminConsole;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author gustavo
  */
-public class Pessoa {
+
+
+public class Pessoa implements Serializable {
     String name;
-    Long matric;
+    Long nrEstudante;
     String Password;
     String Dpto_facul;
     Date card_valid;
     String tel;
     String morada;
     
-    public Pessoa(String name,Long matric,String Password,String Dpto_facul,Date card_valid,String tel,String morada){
+    public Pessoa(String name,Long nrEstudante,String Password,String Dpto_facul,Date card_valid,String tel,String morada){
         this.name =name;
-        this.matric =matric;
+        this.nrEstudante =nrEstudante;
         this.Password =Password;
         this.Dpto_facul =Dpto_facul;
         this.card_valid = card_valid ;
@@ -33,8 +36,8 @@ public class Pessoa {
     public void setName(String name){
         this.name =name;
     }
-    public void setMatric(Long matric){
-            this.matric =matric;
+    public void setMatric(Long nrEstudante){
+            this.nrEstudante =nrEstudante;
     }
     public void setPassword(String Password){
         this.Password =Password;
@@ -55,8 +58,8 @@ public class Pessoa {
     public String getName(){
         return this.name;
     }
-    public Long getMatric(){
-        return this.matric;
+    public Long getNrEstudante(){
+        return this.nrEstudante;
     }
     public String getPassword(){
         return this.Password;
