@@ -15,5 +15,6 @@ import java.util.ArrayList;
  * @author gustavo
  */
 public interface Comunication_client extends Remote {
-     public void reply_on_client()throws RemoteException;
+     public void reply_on_client(String a)throws RemoteException;
+     public void reply_list_on_client(ListasCandidatos list)throws RemoteException;
 }

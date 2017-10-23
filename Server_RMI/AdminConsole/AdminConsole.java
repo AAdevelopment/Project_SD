@@ -5,49 +5,67 @@
  */
 package Server_RMI.AdminConsole;
 
-import Server_RMI.ClientTest;
 import Server_RMI.Comunication_client;
 import Server_RMI.Comunication_server;
+import Server_RMI.ListasCandidatos;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author gustavo
  */
-public class AdminConsole  {
+public class AdminConsole extends UnicastRemoteObject implements Comunication_client  {
     
-    public static void main(String args[]) throws RemoteException, NotBoundException{
+    public AdminConsole() throws RemoteException {
+        super();
+    }
+    
+    @Override
+    public void reply_on_client(String a){
+        System.out.println("Server: "+a);
+    }
+    public void reply_list_on_client(ListasCandidatos list){
+        System.out.println(list.toString());
+    }
+    public static void main(String args[]) throws RemoteException, NotBoundException, IOException{
         Integer opcao=0;
         
         try{
+
             System.getProperties().put("java.security.policy", "/home/gustavo/NetBeansProjects/Ivotas/src/Server_RMI/policy.all");
             System.setSecurityManager(new RMISecurityManager());
             Comunication_server h = (Comunication_server) LocateRegistry.getRegistry(6500).lookup("connection_RMI");
             
-            ClientTest c = new ClientTest();
-           // h.subscribe("stub",(Comunication_client)  c);
-            
+            AdminConsole c = new AdminConsole();
+            h.subscribe("oi", (Comunication_client) c);
+           // System.out.println("Client sent subscription to server");
             String reply="";
+            String a="";
             boolean verifica=true;
+           
+            
             
             do{
-          
                 opcao=Integer.parseInt(JOptionPane.showInputDialog("1-verificar conexao"+"\n"+"2-criar eleicao"+"\n"+"3-criar lista de candidato\n"+"4-Registrar Pessoa"
                         +"\n"+"9- sair do menu"));
                 switch(opcao){
                     case 1:
-                    System.out.println( reply=h.Test_connection());
+                    System.out.println(reply=h.Test_connection());
                     case 2:
                         h.criarEleicao();
                     break; 
                     case 3:
                        String nome="";
                        nome=JOptionPane.showInputDialog("Digite o nome da lista");
-                       System.out.println(h.CriarLista(nome).toString());
+                       h.CriarLista(nome);
                     break;
                     case 4:
                         h.CadastrarPessoa();
@@ -56,8 +74,8 @@ public class AdminConsole  {
                         verifica=false;
                     break;
                 }    
-            }while(verifica =true);
-             
+            }while(verifica == true);
+            
         }catch(RemoteException re){
             re.getMessage();
         } catch (NotBoundException ex) {

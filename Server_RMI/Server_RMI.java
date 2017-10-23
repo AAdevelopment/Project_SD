@@ -8,10 +8,12 @@ package Server_RMI;
 import Server_RMI.AdminConsole.Eleicao;
 import Server_RMI.AdminConsole.Pessoa;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -47,13 +49,14 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     }
     
     //interface methods;
+    
     @Override
     public String Test_connection() throws RemoteException {
 		return "Server: Running!";
     }
     @Override
     public void subscribe(String name, Comunication_client c) throws RemoteException {
-        System.out.println("Subscribing "+name);
+        //System.out.println("Subscribing "+name);
         this.c = c;
     }
     
@@ -71,52 +74,53 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     }
     
     @Override
-    public ListasCandidatos CriarLista(String nome){
-        ArrayList<String> list = new ArrayList();
-        ListasCandidatos l = new ListasCandidatos(nome,list);
-        int n=0;
-        String saida="";
-        boolean verifica =true;
-        while(verifica==true){
-            saida=JOptionPane.showInputDialog("digite o nome do candidato, clique em cancel para sair:");
-            if(saida==null){
-             verifica =false;   
-             break;
-            }
-            else{
-                l.setList(saida);    
-            }
+    public void CriarLista(String nome){
+        ListasCandidatos l = new ListasCandidatos(nome);
+        try {
+            FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/listas",true);
+            int n=0;
+            String saida="";
+            boolean verifica =true;
+            while(verifica==true){
+                saida=JOptionPane.showInputDialog("digite o nome do candidato, clique em cancel para sair:");
+                if(saida==null){
+                    verifica =false;   
+                    break;
+                }
+                else{
+                    l.setList(saida);    
+                }
             
+            }
+            out.write(l.toString()+"qtd=0"+"\n");
+            out.close();
+            c.reply_list_on_client(l);
+            System.out.println(l);
+          } catch (IOException ex) {
+            ex.getMessage();
         }
-        System.out.println(l);
-        return l;
     }
   
     
     @Override
-    public Integer vote(ArrayList<String> list)throws RemoteException{
+    public Integer vote(ListasCandidatos list)throws RemoteException{
       
         Integer qtd=null;
         try {
-                FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/lista1");
-                FileReader read = new FileReader("/home/gustavo/NetBeansProjects/Ivotas/lista1");
+                FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/listas");
+                FileReader read = new FileReader("/home/gustavo/NetBeansProjects/Ivotas/listas");
                 BufferedReader in = new BufferedReader(read);
                 String s="";
                 while((s=in.readLine())!=null){
                     String[] a;
                     a=s.split("=");
                     qtd=Integer.parseInt(a[1]);
-                }
-                qtd++;
-                
-                while((s=in.readLine())!=null){
-                    String[] a;
-                    a=s.split("=");
+                    qtd++;
                     a[1]=Integer.toString(qtd);
                     out.write(a[1]);
+                    out.close();
                 }
-                
-            
+              
         } catch (FileNotFoundException ex) {
             ex.getMessage();
         } catch (IOException ex) { 
@@ -136,13 +140,13 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     
     @Override
     public void criarEleicao(){
-        Eleicao el = null;
-     //   try {
-       //     el = new Eleicao("Nucleo estudantes","DEI");
-        } //catch (ParseException ex) {
-          //  ex.getMessage();
-        
-        //System.out.println(el);
+       try {
+           Eleicao  el = new Eleicao("Nucleo estudantes","DEI","2017-09-21");
+           System.out.println(el);
+        } catch (ParseException ex) {
+          ex.getMessage();
+        }
+    }
     @Override
      public  void CadastrarPessoa(){
         String tipo_pessoa=""; 
@@ -183,22 +187,24 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     } 
     
     //server runnig;
-    public static void main(String args[])throws RemoteException, MalformedURLException {
+    public static void main(String args[])throws RemoteException, MalformedURLException, IOException {
         //if (System.getSecurityManager() == null)
           //  System.setSecurityManager ( new RMISecurityManager() );
         try{
+            InputStreamReader input = new InputStreamReader(System.in);
+            BufferedReader reader = new BufferedReader(input);
             System.getProperties().put("java.security.policy", "/home/gustavo/NetBeansProjects/Ivotas/src/Server_RMI/policy.all");
             System.setSecurityManager(new RMISecurityManager());
+            
             Server_RMI server = new Server_RMI();
             Registry r = LocateRegistry.createRegistry(6500);
-            
-             r.rebind("connection_RMI",server);
-            //r.rebind("connection_RMI",server);
+            r.rebind("connection_RMI",server);
+            String a="";
             System.out.println("Server RMI ready...");
-            
-           /* while(true){
-                c.reply_on_client();
-            }*/    
+            while(true){
+               a=reader.readLine();
+               c.reply_on_client(a);
+            }    
         }catch(RemoteException re){
             System.out.println(re.getMessage());
         }

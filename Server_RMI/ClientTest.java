@@ -29,7 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-public class ClientTest implements Comunication_client {
+public class ClientTest{ //implements Comunication_client {
      Server_RMI server1;
      
      
@@ -42,49 +42,40 @@ public class ClientTest implements Comunication_client {
     }
    
     
-    public static void main(String args[]){
+    public static void main(String args[]) throws RemoteException, IOException{
         
-        //try{
-            /*System.getProperties().put("java.security.policy", "/home/gustavo/NetBeansProjects/Ivotas/src/Server_RMI/policy.all");
-            System.setSecurityManager(new RMISecurityManager());
-            Comunication_server h = (Comunication_server) LocateRegistry.getRegistry(6500).lookup("connection_RMI");
-           
-            ClientTest c = new ClientTest();
-            //h.subscribe("stub",(Comunication_client)  c);
-            String reply=h.Test_connection();
-            System.out.println(reply);
-            Integer i=Integer.parseInt(JOptionPane.showInputDialog("digite a lista em que deseja votar"));
-            System.out.println(h.returnList(i).toString());*/
-           // CadastrarPessoa();
+      
+          vote("lista1");
              
         
-       // }catch(RemoteException re){
-         //   re.getMessage();
-        //} catch (NotBoundException ex) {
-         //   ex.getMessage();
-        //}
-        
     }
-     public static Integer vote(ArrayList<String> list)throws RemoteException, FileNotFoundException, IOException{
+     public static Integer vote(String nome_lista)throws RemoteException, FileNotFoundException, IOException{
       
         Integer qtd=null;
-        try {
-                FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/lista1");
-                FileReader read = new FileReader("/home/gustavo/NetBeansProjects/Ivotas/lista1");
+        try {   
+                
+                FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/listas");
+                FileReader read = new FileReader("/home/gustavo/NetBeansProjects/Ivotas/listas");
                 BufferedReader in = new BufferedReader(read);
                 String s="";
                 while((s=in.readLine())!=null){
-                    String[] a;
-                    a=s.split("=");
-                    qtd=Integer.parseInt(a[1]);
+                    String a[];
+                    a=s.split(nome_lista);
+                    System.out.println("0: "+a.toString());
+                    if(a[1]==nome_lista){
+                        a=s.split("=");
+                        qtd=Integer.parseInt(a[1]);
+                    }      
                 }
+                System.out.println("1: "+qtd);
                 qtd++;
                 
-                while((s=in.readLine())!=null){
+               /* while((s=in.readLine())!=null){
                     String[] a;
                     a=s.split("=");
-                    a[1]=Integer.toString(qtd);
-                }
+                   out.write(a[1]=Integer.toString(qtd));
+                   out.close();
+                }*/
             
         } catch (FileNotFoundException ex) {
             ex.getMessage();
@@ -95,6 +86,5 @@ public class ClientTest implements Comunication_client {
         
         return qtd;
     }
-     
-   
 }
+

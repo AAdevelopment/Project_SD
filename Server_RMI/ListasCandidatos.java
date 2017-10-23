@@ -16,32 +16,28 @@ import Server_RMI.AdminConsole.Eleicao;
 public class ListasCandidatos implements Serializable{
     ArrayList<String> listacandidato;
     String nome;
-    String[] v;
     Eleicao e;
     ListasCandidatos l;
     
-    public ListasCandidatos(String nome,ArrayList<String> listacandidato){
+    public ListasCandidatos(String nome){
       //  super();
         this.nome = nome;
-        this.listacandidato =listacandidato;
         this.listacandidato = new ArrayList();
         
-        //this.e = e;
-
     }
     
    public void setList(String nomecandidato){
        this.listacandidato.add(nomecandidato);
    }
-   /* public ArrayList<String> Getlista(String[] v){
+  
+    public String toString(){
+     return this.nome+ this.listacandidato.toString();
+    }
+    
+     /* public ArrayList<String> Getlista(String[] v){
       listacandidato = new ArrayList();
       for(int i=0;i<v.length;i++)
             listacandidato.add(i,v[i]);    
       return listacandidato;
     }*/
-   
-    public String toString(){
-     
-     return this.nome +":"+ this.listacandidato.toString();
-    }
 }

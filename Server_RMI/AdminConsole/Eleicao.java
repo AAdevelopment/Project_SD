@@ -6,6 +6,7 @@
 package Server_RMI.AdminConsole;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,28 +24,56 @@ public class Eleicao implements Runnable,Serializable {
     String titulo;
     String descricao;
     Thread t;
-    Date dataini;
-    Date datafim;
+    Date data;
+    SimpleDateFormat dt;
     
-    public Eleicao(String tipo,String titulo,String dataini,String datafim) throws ParseException{
-        this.dataini = new Date();
-        this.datafim = new Date();
+    public Eleicao(String tipo,String titulo,String data) throws ParseException{
         this.tipo = tipo;
         this.titulo=titulo;
+        this.data = new Date();
+        dt = new SimpleDateFormat("dd-mm-yyyy"); 
+        this.data =dt.parse(data);
         t = new Thread(this,titulo);
         t.start();
     }
     
     @Override
     public void run(){
-        while(true){
-            System.out.println(dataini);
-            
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                ex.getMessage();
-            }
+        //8hrs
+        //this.data.getTime();
+        
+        
+        SimpleDateFormat dt = new SimpleDateFormat("HH:mm");
+        Date now = new Date();
+        Date horafim = new Date();
+        Date horaini = new Date();
+        try {
+            horafim=dt.parse("03:23");
+            horaini=dt.parse("01:00");
+        } catch (ParseException ex) {
+            ex.getMessage();
+        }
+        
+        //long inicio=System.currentTimeMillis();
+        //long duracao=28800000;
+        
+        System.out.println(System.currentTimeMillis()+" date: "+dt.format(now.getTime())
+        +"  "+dt.format(horaini.getTime())+" "+dt.format(horafim.getTime()));
+        if(now.after(horaini)){
+            Boolean verifica=true;
+            while(verifica==true){
+                now.setTime(System.currentTimeMillis());
+                System.out.println(System.currentTimeMillis()+" date: "+dt.format(now.getTime()));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.getMessage();
+                }
+                if(now.after(horafim)){
+                    verifica =false;
+                }
+            }    
+        
         }
     }
     
@@ -53,6 +82,10 @@ public class Eleicao implements Runnable,Serializable {
     }
     public String  getDescricao(){
         return this.descricao;
+    }
+    @Override
+    public String toString(){
+        return this.tipo+this.titulo+this.data.toGMTString();
     }
 
 }
