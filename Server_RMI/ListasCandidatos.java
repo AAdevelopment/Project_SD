@@ -17,7 +17,6 @@ public class ListasCandidatos implements Serializable{
     ArrayList<String> listacandidato;
     String nome;
     Eleicao e;
-    ListasCandidatos l;
     
     public ListasCandidatos(String nome){
       //  super();

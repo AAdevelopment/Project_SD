@@ -6,6 +6,7 @@
 package Server_RMI;
 
 import Server_RMI.AdminConsole.Eleicao;
+import Server_RMI.AdminConsole.Faculdade;
 import Server_RMI.AdminConsole.Pessoa;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -41,8 +42,6 @@ import java.util.logging.Logger;
 
 public class Server_RMI  extends UnicastRemoteObject implements Comunication_server {
     static Comunication_client c;
-    String vetCand[]={"paulo","pedro","eduardo","tiago","felipe","joao"}; 
-    String vetCand2[]={"pedrino","Janio"};
 
     public Server_RMI() throws RemoteException{
         super();
@@ -74,7 +73,9 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     }
     
     @Override
-    public void CriarLista(String nome){
+    public void CriarLista(){
+        String nome="";
+        nome=JOptionPane.showInputDialog("Digite o nome da lista");
         ListasCandidatos l = new ListasCandidatos(nome);
         try {
             FileWriter out = new FileWriter("/home/gustavo/NetBeansProjects/Ivotas/listas",true);
@@ -101,7 +102,25 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
         }
     }
   
-    
+    @Override
+    public void CriarFaculdade_Dpto() throws RemoteException{
+        String nome="";
+        nome=JOptionPane.showInputDialog("Digite o nome da faculdade:");
+        Faculdade f = new Faculdade(nome);
+        String saida="";
+        boolean verifica =true;
+        while(verifica==true){
+            saida=JOptionPane.showInputDialog("digite o nome do Departamento, clique em cancel para sair:");
+            if(saida==null){
+                verifica =false;   
+                break;
+            }
+            else{
+                f.criarDPTO(nome);    
+            }
+        }
+        c.reply_FacultyDptolist_on_client(f);
+    }
     @Override
     public Integer vote(ListasCandidatos list)throws RemoteException{
       
@@ -133,15 +152,19 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
     
     public synchronized HashMap listaEleicao(String nrtitulo){
         HashMap h = new HashMap();
-        h.put(1, vetCand);
-        h.put(2,vetCand);
         return h;
     }
     
     @Override
     public void criarEleicao(){
        try {
-           Eleicao  el = new Eleicao("Nucleo estudantes","DEI","2017-09-21");
+           String v[]={"Digite o tipo de eleicao","Digite o nome da eleicao"};
+           String valores[] = new String [v.length];
+           
+           for(int i=0;i<v.length;i++){
+               valores[i]=JOptionPane.showInputDialog(v[i]);
+           }
+           Eleicao  el = new Eleicao(valores[0],valores[1]);
            System.out.println(el);
         } catch (ParseException ex) {
           ex.getMessage();
@@ -193,8 +216,9 @@ public class Server_RMI  extends UnicastRemoteObject implements Comunication_ser
         try{
             InputStreamReader input = new InputStreamReader(System.in);
             BufferedReader reader = new BufferedReader(input);
-            System.getProperties().put("java.security.policy", "/home/gustavo/NetBeansProjects/Ivotas/src/Server_RMI/policy.all");
-            System.setSecurityManager(new RMISecurityManager());
+            
+            //System.getProperties().put("java.security.policy", "/home/gustavo/NetBeansProjects/Ivotas/src/Server_RMI/policy.all");   
+            //System.setSecurityManager(new RMISecurityManager());
             
             Server_RMI server = new Server_RMI();
             Registry r = LocateRegistry.createRegistry(6500);

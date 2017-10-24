@@ -35,6 +35,10 @@ public class AdminConsole extends UnicastRemoteObject implements Comunication_cl
     public void reply_list_on_client(ListasCandidatos list){
         System.out.println(list.toString());
     }
+    
+    public void reply_FacultyDptolist_on_client(Faculdade f){
+        System.out.println(f.toString());
+    }    
     public static void main(String args[]) throws RemoteException, NotBoundException, IOException{
         Integer opcao=0;
         
@@ -50,7 +54,7 @@ public class AdminConsole extends UnicastRemoteObject implements Comunication_cl
             String reply="";
             String a="";
             boolean verifica=true;
-           
+            System.out.println(h.Test_connection());
             
             
             do{
@@ -63,13 +67,13 @@ public class AdminConsole extends UnicastRemoteObject implements Comunication_cl
                         h.criarEleicao();
                     break; 
                     case 3:
-                       String nome="";
-                       nome=JOptionPane.showInputDialog("Digite o nome da lista");
-                       h.CriarLista(nome);
+                       h.CriarLista();
                     break;
                     case 4:
                         h.CadastrarPessoa();
                         break;
+                    case 5:
+                        h.CriarFaculdade_Dpto();
                     case 9:
                         verifica=false;
                     break;
